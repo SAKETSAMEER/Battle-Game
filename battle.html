@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Battle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="battle-panel">
+        <div id="orientation-prompt">
+            <p>Please rotate your device to landscape mode to play.</p>
+        </div>
+        <div class="game-screen">
+            <img id="player-stun-gif" src="" alt="Player Stunned" class="stun-gif hidden">
+            <img id="opponent-stun-gif" src="" alt="Opponent Stunned" class="stun-gif hidden">
+            <div id="player-gif-container" class="attack-gif-container">
+                <img id="player-attack-gif" src="" alt="Player Attack Effect" class="attack-gif">
+            </div>
+            <div id="opponent-gif-container" class="attack-gif-container">
+                <img id="opponent-attack-gif" src="" alt="Opponent Attack Effect" class="attack-gif">
+            </div>
+            <div id="middle-gif-container" class="attack-gif-container">
+                <img id="middle-attack-gif" src="" alt="Middle Attack Effect" class="attack-gif">
+            </div>
+
+            <div class="character opponent">
+                <div class="health-bar opponent">
+                    <div class="name" id="battle_opponentName">Opponent</div>
+                    <div id="battle_opponentHealth" class="health-fill" style="width: 100%"></div>
+                </div>
+                <div class="opponent-base"></div>
+                <img src="" alt="Opponent" class="opponent-img" id="battle_opponentImage">
+            </div>
+            <div class="character player">
+                <img src="" alt="Player" class="player-img" id="battle_playerImage">
+                <div class="player-hud-bars">
+                    <div class="health-bar player">
+                        <div class="name" id="battle_playerName">Player</div>
+                        <div id="battle_playerHealth" class="health-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="stamina-bar player">
+                        <div class="stamina-text" id="battle_playerStaminaText">100/100</div>
+                        <div id="battle_playerStamina" class="stamina-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-panel">
+                <div class="card-container" id="battle_cardContainer"></div>
+                <div class="buttons">
+                    <button id="online-attack-btn">Attack</button>
+                    <button id="online-attack-card-btn">Attack-Card</button>
+                    <button id="online-buff-card-btn">Buff-Card</button>
+                    <button id="online-debuff-card-btn">Debuff-Card</button>
+                    <button id="online-defence-btn">Defence</button>
+                </div>
+                <div class="log" id="battle_log"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="battle.js"></script>
+</body>
+
+</html>

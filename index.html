@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyCQts56MpSkWQ0JB1RcOMx4cM-QntG6WzQ",
+      authDomain: "game-war-choice-battle.firebaseapp.com",
+      projectId: "game-war-choice-battle",
+      storageBucket: "game-war-choice-battle.firebasestorage.app",
+      messagingSenderId: "576456178611",
+      appId: "1:576456178611:web:768654f660749c8d7c69c6",
+      measurementId: "G-9SL7V3EFQD"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+
+
+  <title>GAME WAR (Choice Battle)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jersey+20&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="disclaimer-panel" class="panel hidden" style="text-align: center; justify-content: center;">
+    <h2>Disclaimer</h2>
+    <p style="max-width: 600px; line-height: 1.6;">
+      This is a non-commercial, fan-made game created for entertainment and educational purposes. Many assets,
+      characters, and story elements are based on the 'Questism' manhwa and are the intellectual property of the author,
+      Park Tae-jun (PTJ comics). Additional assets, including various GIFs, images, and sound effects, have been sourced
+      from the internet and belong to their respective creators. No copyright infringement is intended. This project is
+      not affiliated with, endorsed by, or sponsored by any of the original copyright holders.
+      <br><br>
+      If you are the owner of any asset used in this game and have concerns, or if you encounter any issues with the
+      game, please feel free to contact me
+
+    </p>
+  </div>
+  <div id="loading-panel" class="panel hidden">
+    <h2>Loading Game Assets...</h2>
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+    </div>
+    <p id="progress-text">0%</p>
+  </div>
+  <div id="intro-panel" class="panel">
+    <video autoplay muted loop playsinline id="bg-video">
+      <source src="videos/intro.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+    <div class="intro-overlay">
+      <div id="main-menu">
+        <button id="newGameBtn">New Game</button>
+        <button id="onlineBtn">Online Mode</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div id="name-panel" class="panel hidden">
+    <form onsubmit="completeName(); return false;">
+      <h2><br><br>System Rebooting ERROR %&%!...<br>User name?</h2>
+      <input type="text" id="nameInput" placeholder="Enter your name" required />
+      <button type="submit">Complete</button>
+    </form>
+  </div>
+
+  <div id="dice-panel" class="panel hidden">
+    <h2>Draw your Stats...</h2>
+    <div id="playerCard"></div>
+    <button id="rollDiceBtn">🎲 Roll Dice (3 left)</button>
+    <div id="rolledStats" class="hidden">
+      <div id="statReveal"></div>
+      <button>Start Journey</button>
+    </div>
+  </div>
+
+  <div id="story-panel" class="panel hidden">
+    <h2 id="story-title">Your Story</h2>
+    <p id="story-text"></p>
+    <button id="nextBtn">Next</button>
+    <button id="startGameBtn" class="hidden">Start</button>
+  </div>
+
+  <div id="game-panel" class="panel hidden">
+    <div class="container">
+      <div class="game">
+        <h2 id="game-title">Choose Your Path</h2>
+        <p id="game-desc">You now stand at the crossroads of fate.</p>
+
+        <div id="card-choices" class="choice-area hidden"></div>
+        <div id="action-choices" class="choice-area"></div>
+      </div>
+
+      <div class="stats">
+        <div id="gamePlayerCard" class="player-card"></div>
+        <div id="player-name"></div>
+        <div id="player-gold-display">Gold: 0</div> <button id="shopBtn">Card Shop</button>
+
+
+        <h3>Status Card</h3>
+        <div class="stat-block" id="str-block">
+          <div class="stat-label">Strength <span id="str-rank">(F)</span></div>
+          <div class="stat-bar">
+            <div class="stat-fill" id="str-fill"></div>
+          </div>
+        </div>
+        <div class="stat-block" id="end-block">
+          <div class="stat-label">Endurance <span id="end-rank">(F)</span></div>
+          <div class="stat-bar">
+            <div class="stat-fill" id="end-fill"></div>
+          </div>
+        </div>
+        <div class="stat-block" id="tech-block">
+          <div class="stat-label">Technique <span id="tech-rank">(F)</span></div>
+          <div class="stat-bar">
+            <div class="stat-fill" id="tech-fill"></div>
+          </div>
+        </div>
+        <div class="stat-block" id="dur-block">
+          <div class="stat-label">Durability <span id="dur-rank">(F)</span></div>
+          <div class="stat-bar">
+            <div class="stat-fill" id="dur-fill"></div>
+          </div>
+        </div>
+        <div class="stat-block" id="spd-block">
+          <div class="stat-label">Speed <span id="spd-rank">(F)</span></div>
+          <div class="stat-bar">
+            <div class="stat-fill" id="spd-fill"></div>
+          </div>
+        </div>
+        <div class="stat-block" id="biq-block">
+          <div class="stat-label">BIQ <span id="biq-rank">(F)</span></div>
+          <div class="stat-bar">
+            <div class="stat-fill" id="biq-fill"></div>
+          </div>
+        </div>
+        <div id="stat-points">
+          <h4>
+            Stat Points: <span id="statPointValue">0</span>
+          </h4>
+          <button id="toggleStatBtn">Allocate Stats</button>
+        </div>
+        <h3>Attack Cards:</h3>
+        <ul id="attack-cards"></ul>
+        <h3>Buff Cards:</h3>
+        <ul id="support-cards"></ul>
+        <h3>Debuff Cards:</h3>
+        <ul id="debuff-cards"></ul>
+        <button id="checkpointBtn">Game Menu</button>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="battle-panel" class="hidden">
+    <div id="orientation-prompt">
+      <p>Please rotate your device to landscape mode to play.</p>
+    </div>
+
+    <div class="game-screen">
+      <img id="player-stun-gif" src="" alt="Player Stunned" class="stun-gif hidden">
+      <img id="opponent-stun-gif" src="" alt="Opponent Stunned" class="stun-gif hidden">
+      <div id="player-gif-container" class="attack-gif-container">
+        <img id="player-attack-gif" src="" alt="Player Attack Effect" class="attack-gif">
+      </div>
+      <div id="opponent-gif-container" class="attack-gif-container">
+        <img id="opponent-attack-gif" src="" alt="Opponent Attack Effect" class="attack-gif">
+      </div>
+      <div id="middle-gif-container" class="attack-gif-container">
+        <img id="middle-attack-gif" src="" alt="Middle Attack Effect" class="attack-gif">
+      </div>
+
+      <div class="character opponent">
+        <div class="health-bar opponent">
+          <div class="name" id="battle_opponentName">Opponent</div>
+          <div id="battle_opponentHealth" class="health-fill" style="width: 100%"></div>
+        </div>
+        <div class="opponent-base"></div>
+        <img src="./cha/opp.png" alt="Opponent" class="opponent-img" id="battle_opponentImage">
+      </div>
+
+      <div class="character player">
+        <img src="" alt="Player" class="player-img" id="battle_playerImage">
+        <div class="player-hud-bars">
+          <div class="health-bar player">
+            <div class="name">Player</div>
+            <div id="battle_playerHealth" class="health-fill" style="width: 100%"></div>
+          </div>
+          <div class="stamina-bar player">
+            <div class="stamina-text" id="battle_playerStaminaText">100/100</div>
+            <div id="battle_playerStamina" class="stamina-fill" style="width: 100%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-panel">
+        <div class="card-container" id="battle_cardContainer"></div>
+        <div class="buttons">
+          <button onclick="battle_playerMove('attack')">Attack</button>
+          <button onclick="battle_toggleCardContainer('attack-card')">Attack-Card</button>
+          <button onclick="battle_toggleCardContainer('buff-card')">Buff-Card</button>
+          <button onclick="battle_toggleCardContainer('debuff-card')">Debuff-Card</button>
+          <button onclick="battle_playerMove('defence')">Defence</button>
+        </div>
+        <div class="log" id="battle_log"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="race-panel" class="panel hidden">
+    <div id="race-orientation-prompt">
+      <p>Rotate your device to portrait mode for smoother run.</p>
+    </div>
+    <canvas id="raceCanvas"></canvas>
+  </div>
+
+  <div id="training-panel" class="panel hidden">
+    <img id="training-gif" src="cha/working_out_workout_V3.gif" alt="Training..." />
+  </div>
+
+  <div id="reward-panel" class="panel hidden">
+    <div id="reward-content">
+      <h2>Congratulations!</h2>
+      <p>Your stats have reached a new level! You've earned a new card:</p>
+      <div id="reward-card-display" class="card"></div>
+    </div>
+  </div>
+  <div id="video-panel" class="panel hidden">
+    <video id="endVideo" playsinline>
+      <source src="" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+
+  <div id="checkpoint-container" class="hidden">
+    <div id="checkpoint-panel" class="popup-panel">
+      <h2>Game Menu</h2>
+      <button id="save-btn">Save Checkpoint</button>
+      <button id="load-btn">Load Checkpoint</button>
+      <button id="clear-btn">Clear All Data</button>
+      <button id="return-btn">Return to Game</button>
+    </div>
+
+    <div id="save-slots-panel" class="popup-panel hidden">
+      <h2>Save to Slot</h2>
+      <div id="save-slots-container"></div>
+      <button class="back-btn">Back</button>
+    </div>
+
+    <div id="load-slots-panel" class="popup-panel hidden">
+      <h2>Load from Slot</h2>
+      <div id="load-slots-container"></div>
+      <button class="back-btn">Back</button>
+    </div>
+
+    <div id="clear-confirm-panel" class="popup-panel hidden">
+      <h2>Clear All Checkpoints?</h2>
+      <p>This action cannot be undone.</p>
+      <button id="confirm-clear-btn">Yes, Clear</button>
+      <button id="cancel-clear-btn" class="back-btn">No, Cancel</button>
+    </div>
+  </div>
+
+  <!-- Simple Notification Popup -->
+  <div id="popup-message" class="popup hidden"></div>
+
+  <!-- Confirm Dialog -->
+  <div id="confirm-dialog" class="popup hidden">
+    <p id="confirm-message">Are you sure?</p>
+    <div class="confirm-buttons">
+      <button id="confirm-yes">Yes</button>
+      <button id="confirm-no">No</button>
+    </div>
+  </div>
+
+  <div id="shop-panel" class="panel hidden">
+    <h2 class="pixel-gamer-text">Card Shop</h2>
+    <div id="shop-gold-display">Gold: 0</div>
+    <div class="pack-container">
+      <div class="pack-card bronze">
+        <h3>Bronze Pack</h3>
+        <p class="pack-cost">50 Gold</p>
+        <button onclick="buyCardPack('bronze')">Buy</button>
+      </div>
+      <div class="pack-card silver">
+        <h3>Silver Pack</h3>
+        <p class="pack-cost">150 Gold</p>
+        <button onclick="buyCardPack('silver')">Buy</button>
+      </div>
+      <div class="pack-card diamond">
+        <h3>Diamond Pack</h3>
+        <p class="pack-cost">250 Gold</p>
+        <button onclick="buyCardPack('diamond')">Buy</button>
+      </div>
+    </div>
+    <button id="returnToGameBtn">Return to Game</button>
+  </div>
+
+  <div id="pack-reward-popup" class="hidden">
+    <div id="pack-reward-content">
+      <h2 id="pack-reward-title">You Received:</h2>
+      <div id="pack-reward-card-display"></div>
+      <button id="close-reward-popup">Close</button>
+    </div>
+  </div>
+
+  <audio id="btnSound" src="sound/click.mp3" preload="auto"></audio>
+  <audio id="normalAttackSound" src="cha/sound/normal Punch.wav" preload="auto"></audio>
+  <audio id="cardSpecificSound" src="" preload="auto"></audio>
+  <audio id="collectDropSound" src="cha/sound/coin-collect.wav" preload="auto"></audio>
+  <audio id="raceWinSound" src="cha/sound/normal Punch.wav" preload="auto"></audio>
+  <audio id="raceCrashSound" src="cha//sound/T-kick.wav" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

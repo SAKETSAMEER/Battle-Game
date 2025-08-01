@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME WAR - Online Lobby</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Additional styles specific to the online lobby */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a1a;
+        }
+        .lobby-container {
+            width: 90%;
+            max-width: 800px;
+            background: #2c3e50;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .server-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .server-box {
+            background: #34495e;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #7f8c8d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .server-box.selected {
+            border-color: #3498db;
+            box-shadow: 0 0 15px #3498db;
+        }
+        .server-box:hover {
+            transform: scale(1.05);
+        }
+        #player-list {
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="lobby-container">
+        <h1>Online Battle Lobby</h1>
+        <p id="status-message">Connecting to server...</p>
+
+        <div id="main-lobby-view">
+            <button id="match-search-btn">Match Search</button>
+            <button id="return-btn">Return to Main Menu</button>
+        </div>
+
+        <div id="server-view" class="hidden">
+            <h2>Select a Server</h2>
+            <div class="server-list">
+                <div class="server-box" id="server-1" data-id="server-1">Server 1<br><span class="player-count">(0/8)</span></div>
+                <div class="server-box" id="server-2" data-id="server-2">Server 2<br><span class="player-count">(0/8)</span></div>
+                <div class="server-box" id="server-3" data-id="server-3">Server 3<br><span class="player-count">(0/8)</span></div>
+                <div class="server-box" id="server-4" data-id="server-4">Server 4<br><span class="player-count">(0/8)</span></div>
+            </div>
+            <p id="player-list">Players in server: 0</p>
+            <button id="start-match-btn" disabled>Start Match</button>
+            <button id="leave-server-btn">Back</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="online.js"></script>
+</body>
+</html>
